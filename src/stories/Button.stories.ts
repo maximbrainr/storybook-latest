@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+import { fn, userEvent, within, expect } from '@storybook/test';
+
 
 import { Button } from './Button';
 
@@ -26,6 +27,17 @@ type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Primary: Story = {
+  play: async ({ canvasElement }) => {
+    // Assigns canvas to the component root element
+    const canvas = within(canvasElement);
+
+    await userEvent.click(canvas.getByLabelText('Login'));
+    await expect(
+      canvas.getByText(
+        'Welcome, Miguel Santos!'
+      )
+    ).toBeInTheDocument();
+  },
   args: {
     primary: true,
     label: 'Button',
